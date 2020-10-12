@@ -31,6 +31,8 @@ for i in range(10):
         description='dummy dag',
         schedule_interval=timedelta(minutes=1)
     )
+
+    globals()[dag_id] = dag
     
     for j in range(10):
         task = PythonOperator(
@@ -38,3 +40,4 @@ for i in range(10):
             python_callable=long_process,
             dag=dag
         )
+
