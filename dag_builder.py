@@ -1,5 +1,5 @@
 from airflow.models import DAG
-from airflow.operators.python import PythonOperator, PythonVirtualenvOperator
+from airflow.operators.python import PythonVirtualenvOperator
 import time
 
 
