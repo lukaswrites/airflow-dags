@@ -25,6 +25,7 @@ dag_bag = []
 
 
 for i in range(10):
+    dag_id = 'dag_id'+str(i)
     dag = DAG(
         'dag_id'+str(i),
         default_args=default_args,
