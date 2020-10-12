@@ -31,7 +31,10 @@ for i in range(10):
         description='dummy dag',
         schedule_interval=timedelta(minutes=1)
     )
-
-    dag_bag.append(dag)
-
     
+    for j in range(10):
+        task = PythonOperator(
+            task_id = 'task_id_'+str(j),
+            python_callable=long_process,
+            dag=dag
+        )
