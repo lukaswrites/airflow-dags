@@ -1,7 +1,7 @@
 from airflow.models import DAG
 from airflow.operators.python_operator import PythonOperator,PythonVirtualenvOperator
 import time
-
+from airflow.utils.dates import days_ago
 
 #dynamically build dummy dags and tasks
 
