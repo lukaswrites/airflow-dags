@@ -10,14 +10,14 @@ def long_process():
 
 for i in range(10):
     dag = DAG(
-        'dag_id'+i,
+        'dag_id'+str(i),
         default_args=default_args,
         description='dummy dag',
         schedule_interval=timedelta(minutes=1)
     )
     for j in range(10):
         task = PythonOperator(
-            task_id = 'task_id_'+j,
+            task_id = 'task_id_'+str(j),
             python_callable=long_process,
             dag=dag
         )
