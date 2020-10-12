@@ -30,7 +30,7 @@ for i in range(10):
         'dag_id'+str(i),
         default_args=default_args,
         description='dummy dag',
-        schedule_interval=timedelta(minutes=20)
+        schedule_interval=timedelta(days=1)
     )
 
     globals()[dag_id] = dag
