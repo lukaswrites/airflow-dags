@@ -8,6 +8,18 @@ import time
 def long_process():
     time.sleep(100)
 
+
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date': days_ago(2),
+    'email': ['airflow@example.com'],
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=1),
+}
+
 for i in range(10):
     dag = DAG(
         'dag_id'+str(i),
