@@ -21,6 +21,9 @@ default_args = {
     'retry_delay': timedelta(minutes=1),
 }
 
+dag_bag = []
+
+
 for i in range(10):
     dag = DAG(
         'dag_id'+str(i),
@@ -28,9 +31,7 @@ for i in range(10):
         description='dummy dag',
         schedule_interval=timedelta(minutes=1)
     )
-    for j in range(10):
-        task = PythonOperator(
-            task_id = 'task_id_'+str(j),
-            python_callable=long_process,
-            dag=dag
-        )
+
+    dag_bag.append(dag)
+
+    
