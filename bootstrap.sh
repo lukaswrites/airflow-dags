@@ -12,5 +12,5 @@ sudo apt-get install --assume-yes gcc python3.8-dev
 cp airflow-dags/requirements.txt .
 pip install -r requirements.txt
 airflow
-cp airflow-dags/airflow.cfg airflow/airflow.cfg
+cp airflow-dags/airflow.cfg /home/ubuntu/airflow/airflow.cfg
 airflow worker
