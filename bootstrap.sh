@@ -12,3 +12,4 @@ cp airflow-dags/requirements.txt .
 pip install -r requirements.txt
 airflow
 cp airflow-dags/airflow.cfg airflow
+airflow worker
