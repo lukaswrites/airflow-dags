@@ -14,5 +14,5 @@ pip install -r requirements.txt
 su ubuntu
 source /env/bin/activate
 airflow
-cp airflow-dags/airflow.cfg /home/ubuntu/airflow/airflow.cfg
+cp /airflow-dags/airflow.cfg /home/ubuntu/airflow/airflow.cfg
 airflow worker
