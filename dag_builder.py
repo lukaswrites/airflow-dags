@@ -8,7 +8,7 @@ import random
 #dynamically build dummy dags and tasks
 
 def long_process():
-    n = random.randint(1,1000)
+    n = random.randint(1,100)
     time.sleep(n)
 
 
