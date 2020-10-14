@@ -11,8 +11,7 @@ sudo apt install --assume-yes libcurl4-openssl-dev libssl-dev
 sudo apt-get install --assume-yes gcc python3.8-dev
 cp airflow-dags/requirements.txt .
 pip install -r requirements.txt
-su ubuntu
-source /env/bin/activate
+mkdir airflow
 airflow
-cp /airflow-dags/airflow.cfg /home/ubuntu/airflow/airflow.cfg
+cp /airflow-dags/airflow.cfg /airflow/airflow.cfg
 airflow worker
