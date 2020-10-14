@@ -3,11 +3,13 @@ from airflow.operators.python_operator import PythonOperator,PythonVirtualenvOpe
 import time
 from airflow.utils.dates import days_ago
 from datetime import timedelta
+import random
 
 #dynamically build dummy dags and tasks
 
 def long_process():
-    time.sleep(100)
+    n = random.randint(1,1000)
+    time.sleep(n)
 
 
 default_args = {
