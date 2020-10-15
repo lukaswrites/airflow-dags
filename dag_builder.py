@@ -7,9 +7,8 @@ import random
 
 #dynamically build dummy dags and tasks
 
-def long_process():
-    for i in range(100):
-        time.sleep(random.uniform(1,10))
+def long_process(random_base):
+    time.sleep(random_base)
 
 
 default_args = {
@@ -41,6 +40,7 @@ for i in range(20):
         task = PythonOperator(
             task_id = 'task_id_'+str(j),
             python_callable=long_process,
+            op_kwargs={'random_base': random.randint(1,100)},
             dag=dag
         )
 
