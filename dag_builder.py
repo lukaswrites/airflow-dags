@@ -8,8 +8,8 @@ import random
 #dynamically build dummy dags and tasks
 
 def long_process():
-    n = random.randint(1,100)
-    time.sleep(n)
+    for i in range(100):
+        time.sleep(random.uniform(0,1))
 
 
 default_args = {
