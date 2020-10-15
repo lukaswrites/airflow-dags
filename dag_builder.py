@@ -9,7 +9,7 @@ import random
 
 def long_process():
     for i in range(100):
-        time.sleep(random.uniform(0,1))
+        time.sleep(random.uniform(1,10))
 
 
 default_args = {
