@@ -13,6 +13,7 @@ cp airflow-dags/requirements.txt .
 pip install -r requirements.txt
 mkdir -p /home/cloud_user/repo/airflow-dags/
 cp -R /airflow-dags /home/cloud_user/repo/
+echo "init" > /sample.txt
 airflow
 cp /airflow-dags/airflow.cfg ~/airflow/airflow.cfg
 airflow worker

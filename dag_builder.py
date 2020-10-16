@@ -9,6 +9,9 @@ import random
 
 def long_process(random_base):
     time.sleep(random_base)
+    file_object = open('/sample.txt', 'a')
+    file_object.write('run')
+    file_object.close()
 
 
 default_args = {
