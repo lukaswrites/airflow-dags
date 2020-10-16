@@ -13,7 +13,7 @@ cp airflow-dags/requirements.txt .
 pip install -r requirements.txt
 mkdir -p /home/cloud_user/repo/airflow-dags/
 cp -R /airflow-dags /home/cloud_user/repo/
-airflow initdb
+nohup airflow initdb > /dev/null 2>&1 &
 cp /airflow-dags/airflow.cfg ~/airflow/airflow.cfg
-airflow scheduler
-airflow webserver
+nohup airflow scheduler > /dev/null 2>&1 &
+nohup airflow webserver > /dev/null 2>&1 &

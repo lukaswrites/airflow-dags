@@ -25,22 +25,23 @@ default_args = {
 dag_bag = []
 
 
-for i in range(20):
+for i in range(1):
     dag_id = 'dag_id'+str(i)
     dag = DAG(
         'dag_id'+str(i),
         default_args=default_args,
         description='dummy dag',
-        schedule_interval=timedelta(minutes=5)
+        schedule_interval=timedelta(minutes=60),
+        catchup=False
     )
 
     globals()[dag_id] = dag
     
-    for j in range(10):
+    for j in range(1):
         task = PythonOperator(
             task_id = 'task_id_'+str(j),
             python_callable=long_process,
-            op_kwargs={'random_base': random.randint(1,100)},
+            op_kwargs={'random_base': random.randint(100,100)},
             dag=dag
         )
 
