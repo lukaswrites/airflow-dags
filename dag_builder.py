@@ -9,9 +9,9 @@ import random
 
 def long_process(random_base):
     time.sleep(random_base)
-    file_object = open('/sample.txt', 'a')
-    file_object.write('run')
-    file_object.close()
+    #file_object = open('/sample.txt', 'a')
+    #file_object.write('run')
+    #file_object.close()
 
 
 default_args = {
@@ -28,23 +28,34 @@ default_args = {
 dag_bag = []
 
 
-for i in range(1):
+for i in range(200):
     dag_id = 'dag_id'+str(i)
     dag = DAG(
         'dag_id'+str(i),
         default_args=default_args,
         description='dummy dag',
-        schedule_interval=timedelta(minutes=60),
-        catchup=False
+        schedule_interval=timedelta(minutes=5),
+        catchup=True
     )
 
     globals()[dag_id] = dag
     
-    for j in range(1):
-        task = PythonOperator(
+    us_task = None
+
+    for j in range(60):
+        ds_task = PythonOperator(
             task_id = 'task_id_'+str(j),
             python_callable=long_process,
-            op_kwargs={'random_base': random.randint(100,100)},
+            op_kwargs={'random_base': random.randint(1,100)},
             dag=dag
         )
+
+        if us_task:
+            us_task >> ds_task
+        
+        us_task = ds_task
+
+
+
+
 
