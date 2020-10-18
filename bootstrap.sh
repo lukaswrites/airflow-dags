@@ -1,4 +1,8 @@
 #!/bin/bash
+sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=4096
+sudo /sbin/mkswap /var/swap.1
+sudo chmod 600 /var/swap.1
+sudo /sbin/swapon /var/swap.1
 sudo add-apt-repository ppa:deadsnakes/ppa -y
 sudo apt install --assume-yes python3.8
 sudo apt-get install --assume-yes python3.8-venv
