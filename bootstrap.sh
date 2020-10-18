@@ -17,3 +17,4 @@ echo "init" > /sample.txt
 airflow
 cp /airflow-dags/airflow.cfg ~/airflow/airflow.cfg
 supervisord -c /airflow-dags/supervisord.conf
+airflow worker
