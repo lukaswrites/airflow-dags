@@ -2,11 +2,11 @@ FROM ubuntu:18.04
 
 USER root
 
-ENV AIRFLOW_HOME=~/airflow
+ENV AIRFLOW_HOME=/root/airflow
 WORKDIR /
 COPY requirements.txt .
-RUN mkdir ~/airflow
-COPY airflow.cfg ~/airflow/airflow.cfg
+RUN mkdir -p /root/airflow
+COPY airflow.cfg /root/airflow/airflow.cfg
 RUN apt-get update
 RUN apt-get install --assume-yes software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa -y
@@ -24,4 +24,4 @@ RUN pip3 install -r requirements.txt
 RUN mkdir -p /home/cloud_user/repo/airflow-dags/
 COPY dag_builder.py /home/cloud_user/repo/
 
-CMD cat ~/airflow/airflow.cfg
+CMD cat /root/airflow/airflow.cfg
