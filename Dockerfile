@@ -1,5 +1,7 @@
 FROM ubuntu:18.04
 
+USER root
+
 ENV AIRFLOW_HOME=~/airflow
 WORKDIR /
 COPY requirements.txt .
