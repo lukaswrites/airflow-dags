@@ -5,6 +5,7 @@ USER root
 ENV AIRFLOW_HOME=~/airflow
 WORKDIR /
 COPY requirements.txt .
+RUN mkdir ~/airflow
 COPY airflow.cfg ~/airflow/airflow.cfg
 RUN apt-get update
 RUN apt-get install --assume-yes software-properties-common
