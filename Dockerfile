@@ -24,4 +24,6 @@ RUN pip3 install -r requirements.txt
 RUN mkdir -p /airflow-dags
 COPY dag_builder.py /airflow-dags/dag_builder.py 
 
+EXPOSE 8793
+
 CMD airflow worker
