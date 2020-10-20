@@ -15,6 +15,6 @@ mkdir -p /home/cloud_user/repo/airflow-dags/
 cp -R /airflow-dags /home/cloud_user/repo/
 cp /airflow-dags/airflow.cfg ~/airflow/airflow.cfg
 sleep 10
-airflow initdb
+sudo airflow initdb
 nohup airflow scheduler > /scheduler.log 2>&1 &
 nohup airflow webserver > /webserver.log 2>&1 &
