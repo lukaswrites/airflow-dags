@@ -24,4 +24,5 @@ RUN pip3 install -r requirements.txt
 RUN mkdir -p /home/cloud_user/repo/airflow-dags/
 COPY dag_builder.py /home/cloud_user/repo/
 
+
 CMD [ "airflow", "worker" ]
