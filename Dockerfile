@@ -21,7 +21,7 @@ RUN apt install --assume-yes curl
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 RUN python3.8 get-pip.py
 RUN pip3 install -r requirements.txt
-RUN mkdir -p /home/cloud_user/repo/airflow-dags/
-COPY dag_builder.py /home/cloud_user/repo/
+RUN mkdir -p /airflow-dags
+COPY dag_builder.py /airflow-dags/dag_builder.py 
 
 CMD airflow worker
