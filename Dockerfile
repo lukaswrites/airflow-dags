@@ -1,20 +1,21 @@
 FROM ubuntu:18.04
-
+  
 WORKDIR /
-
 COPY requirements.txt .
-
+COPY airflow.cfg ~/airflow/airflow.cfg
+RUN apt-get update
+RUN apt-get install --assume-yes software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa -y
 RUN apt install --assume-yes python3.8
 RUN apt-get install --assume-yes python3.8-venv
-RUN python3.8 -m venv env
-RUN source env/bin/activate
 RUN apt-get install --assume-yes postgresql
 RUN apt-get install --assume-yes python-psycopg2
 RUN apt-get install --assume-yes libpq-dev
 RUN apt install --assume-yes libcurl4-openssl-dev libssl-dev
 RUN apt-get install --assume-yes gcc python3.8-dev
-RUN pip install -r requirements.txt
-
+RUN apt install --assume-yes curl
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+RUN python3.8 get-pip.py
+RUN pip3 install -r requirements.txt
 
 CMD [ "airflow", "worker" ]
