@@ -12,9 +12,7 @@ def transform_task(sleep_time):
     c_size = 200000
 
     for c_df in pd.read_csv('s3://kuhontol/test.csv.gz', compression='gzip', header=0, chunksize=c_size):
-        c_df['meta'] = 'load'
-        #time.sleep(sleep_time)
-        #print(c_df)
+        df_exploded = c_df['records'].apply(pd.Series)
 
 
 def long_process(random_base):
