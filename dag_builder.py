@@ -13,7 +13,7 @@ def transform_task():
 
     for c_df in pd.read_csv('s3://kuhontol/test.csv.gz', compression='gzip', header=0, chunksize=c_size):
         c_df['meta'] = 'load'
-        print(c_df)
+        #print(c_df)
 
 
 def long_process(random_base):
