@@ -7,8 +7,17 @@ import random
 
 #dynamically build dummy dags and tasks
 
+def transform_task():
+    c_size = 100000
+
+    for c_df in pd.read_csv('s3://kuhontol/test.csv.gz', compression='gzip', header=0, chunksize=c_size):
+        df_exploded = c_df['records'].apply(pd.Series)
+        print(df_exploded)
+
+
 def long_process(random_base):
-    time.sleep(random_base)
+    transform_task()
+    #time.sleep(random_base)
     #file_object = open('/sample.txt', 'a')
     #file_object.write('run')
     #file_object.close()
