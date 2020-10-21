@@ -20,5 +20,5 @@ cp -R /airflow-dags /home/cloud_user/repo/
 echo "init" > /sample.txt
 airflow
 cp /airflow-dags/airflow.cfg ~/airflow/airflow.cfg
-supervisord -c /airflow-dags/supervisord.conf
-airflow worker
+#supervisord -c /airflow-dags/supervisord.conf
+#airflow worker
