@@ -4,6 +4,7 @@ import time
 from airflow.utils.dates import days_ago
 from datetime import timedelta
 import random
+import pandas as pd
 
 #dynamically build dummy dags and tasks
 
