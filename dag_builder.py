@@ -13,7 +13,7 @@ def transform_task(sleep_time):
 
     for c_df in pd.read_csv('s3://kuhontol/test.csv.gz', compression='gzip', header=0, chunksize=c_size):
         c_df['meta'] = 'load'
-        time.sleep(sleep_time)
+        #time.sleep(sleep_time)
         #print(c_df)
 
 
