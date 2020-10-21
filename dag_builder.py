@@ -8,16 +8,17 @@ import pandas as pd
 
 #dynamically build dummy dags and tasks
 
-def transform_task():
+def transform_task(sleep_time):
     c_size = 200000
 
     for c_df in pd.read_csv('s3://kuhontol/test.csv.gz', compression='gzip', header=0, chunksize=c_size):
         c_df['meta'] = 'load'
+        time.sleep(sleep_time)
         #print(c_df)
 
 
 def long_process(random_base):
-    transform_task()
+    transform_task(sleep_time=random_base)
     #time.sleep(random_base)
     #file_object = open('/sample.txt', 'a')
     #file_object.write('run')
@@ -56,7 +57,7 @@ for i in range(64):
         ds_task = PythonOperator(
             task_id = 'task_id_'+str(j),
             python_callable=long_process,
-            op_kwargs={'random_base': random.randint(1,100)},
+            op_kwargs={'random_base': random.randint(1,10)},
             dag=dag
         )
 
