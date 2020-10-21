@@ -9,10 +9,10 @@ import pandas as pd
 #dynamically build dummy dags and tasks
 
 def transform_task():
-    c_size = 10000
+    c_size = 200000
 
     for c_df in pd.read_csv('s3://kuhontol/test.csv.gz', compression='gzip', header=0, chunksize=c_size):
-        df_exploded = c_df['records'].apply(pd.Series)
+        c_df['meta'] = 'load'
         print(df_exploded)
 
 
