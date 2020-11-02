@@ -5,7 +5,7 @@ FROM ubuntu:18.04
 COPY entrypoint.sh /entrypoint.sh
 
 RUN apt update
-RUN apt install git
+RUN apt install --assume-yes git
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
