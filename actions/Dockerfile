@@ -7,6 +7,7 @@ RUN apt update
 RUN apt install --assume-yes git
 RUN apt-get install --assume-yes postgresql
 RUN apt-get install --assume-yes python-psycopg2
+RUN apt-get install --assume-yes libpq-dev
 
 COPY requirements.txt /requirements.txt
 RUN pip3 install -r /requirements.txt
