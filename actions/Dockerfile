@@ -5,6 +5,7 @@ FROM python:3.8-slim-buster
 
 RUN apt update
 RUN apt install --assume-yes git
+RUN apt-get install --assume-yes postgresql
 RUN apt-get install --assume-yes python-psycopg2
 
 COPY requirements.txt /requirements.txt
