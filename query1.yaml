@@ -1,0 +1,50 @@
+node_name: adm_counterparty_investor_denorm_t
+node_type: snowflake_sql
+dependencies:
+  - cdm_counterparty_investor_t
+  - cdm_counterparty_investor_aa_active_setting_invr_agg_t
+  - cdm_counterparty_investor_latest_subscription_agreement_t
+  - cdm_transaction_investor_wallet_trx_investor_agg_t
+  - cdm_transaction_investor_bank_transfer_confirm_investor_agg_t
+  - SENSE_MAS_API_CDM
+  - cdm_counterparty_investor_activation_log_investor_agg_t
+  - cdm_transaction_investment_distribution_success_investor_agg_t
+  - cdm_counterparty_investor_referral_mapping_t
+  - cdm_counterparty_partner_investor_t
+
+
+description: >
+  investor table denormalised
+  Columns descriptions:
+      is_fsmk_founder_account: Member IDs held by Reynold or Kelvin or Kah Meng
+      is_fsc_account: FS Capital accounts
+      is_fsmk_internal_admin_account: Member ID <= 100 except id 4 which is used for FSC (BOLT). Typically has no investments and used as system escrow
+      is_dummy_account: Testing accounts
+rules:
+  check_duplicate_pkey:
+    asset: ADM.COUNTERPARTY.INVESTOR_DENORM_T
+    field: DWH_INVESTOR_ID
+    weight: 10
+    type: RulePrimaryKeyIsUnique
+    critical: True
+    created_by: james.toh@fundingsocieties.com
+    owners:
+      - xuejun.teo@fundingsocieties.com
+
+  check_missing_pkey:
+    asset: ADM.COUNTERPARTY.INVESTOR_DENORM_T
+    field: DWH_INVESTOR_ID
+    weight: 10
+    type: RulePrimaryKeyIsNotNull
+    critical: True
+    created_by: james.toh@fundingsocieties.com
+    owners:
+      - xuejun.teo@fundingsocieties.com
+
+
+owner: Gwen
+owner_email: gwen.wong@fundingsocieties.com
+sql: >
+  insert into rental
+  SELECT rental_id, rental_date, inventory_id, customer_id, return_date, staff_id, last_update, new_column
+  FROM public.rental_dataload;
