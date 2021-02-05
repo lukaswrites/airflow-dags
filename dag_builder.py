@@ -11,7 +11,7 @@ import pandas as pd
 def transform_task(sleep_time):
     c_size = 200000
 
-    for c_df in pd.read_csv('s3://kuhontol/test.csv.gz', compression='gzip', header=0, chunksize=c_size,nrows=100):
+    for c_df in pd.read_csv('s3://kuhontol/test.csv.gz', compression='gzip', header=0, chunksize=c_size,nrows=100000):
         df_exploded = c_df['records'].apply(pd.Series)
 
 
@@ -37,7 +37,7 @@ default_args = {
 dag_bag = []
 
 
-for i in range(10):
+for i in range(64):
     dag_id = 'dag_id'+str(i)
     dag = DAG(
         'dag_id'+str(i),
