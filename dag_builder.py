@@ -37,7 +37,7 @@ default_args = {
 dag_bag = []
 
 
-for i in range(64):
+for i in range(10):
     dag_id = 'dag_id'+str(i)
     dag = DAG(
         'dag_id'+str(i),
@@ -51,7 +51,7 @@ for i in range(64):
     
     us_task = None
 
-    for j in range(60):
+    for j in range(10):
         ds_task = PythonOperator(
             task_id = 'task_id_'+str(j),
             python_callable=long_process,
