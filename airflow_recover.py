@@ -94,7 +94,7 @@ def create_new_job(dag,execution_date,start_date,end_date):
     job_id = [row[0] for row in rs]
     logger.info(f"Job id {job_id[0]} created")
 
-    return job_id
+    return job_id[0]
 
 
 def create_new_task_instances(dag,job_id,execution_date):
