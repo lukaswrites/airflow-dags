@@ -121,6 +121,7 @@ def create_new_dag_runs(dag,to_execution_date):
     while (True):
         
         next_execution_date_str = get_next_execution_date(dag)
+        logger.info(f"exec date:{next_execution_date_str}")
         next_execution_date = datetime.datetime.strptime(next_execution_date_str,"%Y-%m-%d %H:%M:%S%z")
 
         if next_execution_date >= to_execution_date:
