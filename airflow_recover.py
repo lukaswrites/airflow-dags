@@ -150,7 +150,7 @@ def create_new_dag_runs(dag,to_execution_date):
         logger.info(f"Dag run with execution_date {next_execution_date} created")
 
         job_id = create_new_job(dag,next_execution_date,start_date,end_date)
-        create_new_task_instances(dag,next_execution_date,job_id)
+        create_new_task_instances(dag,job_id,next_execution_date)
 
     
     logger.info(f"Processing Dag {dag.id} has been completed")
