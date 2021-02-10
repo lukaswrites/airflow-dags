@@ -65,7 +65,7 @@ def get_active_dags():
 
     for dag in dags_list:
         logger.info(f"Getting task instances for {dag.id}")
-        q_task_instances = f"select distinct task_id from task_instance where dag_id = {dag.id}"
+        q_task_instances = f"select distinct task_id from task_instance where dag_id = '{dag.id}'"
         task_instances = list(pd.read_sql(q_task_instances,con=conn))
         dag.task_instances = task_instances
         logger.info(f"Found {len(task_instances)} task instances for {dag.id}")
