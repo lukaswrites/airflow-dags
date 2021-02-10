@@ -165,7 +165,7 @@ def recover_airflow(hour):
         backfill_dag(dag,to_execution_date)
 
 
-if __name__='__main__':
+if __name__=='__main__':
     recover_airflow(1)
 
 
