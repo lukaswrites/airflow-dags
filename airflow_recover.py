@@ -118,11 +118,15 @@ def create_new_task_instances(dag,job_id,execution_date):
 
 def create_new_dag_runs(dag,to_execution_date):
 
-    while (dag.last_exec_date < to_execution_date):
-        logger.info(f"Creating dag run for {dag.id}")
+    while (True):
         
         next_execution_date_str = get_next_execution_date(dag)
         next_execution_date = datetime.datetime.strptime(next_execution_date_str,"%Y-%m-%d %H:%M:%S%z")
+
+        if next_execution_date >= to_execution_date:
+            break
+        
+        logger.info(f"Creating dag run for {dag.id}")
         run_id = 'scheduled__'+next_execution_date_str.replace(' ','T')
 
         start_date = next_execution_date_str + datetime.timedelta(minutes=1)
