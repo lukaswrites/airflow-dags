@@ -158,7 +158,7 @@ def create_new_dag_runs(dag,to_execution_date):
 def backfill_dag(dag,to_execution_date):
     pause_dag(dag)
     create_new_dag_runs(dag,to_execution_date)
-    resume(dag)
+    resume_dag(dag)
     
 
 def recover_airflow(hour):
