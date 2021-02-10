@@ -81,7 +81,7 @@ def create_new_job(dag,execution_date,start_date,end_date):
 
     q_insert_job = f"""
         insert into job (dag_id,state,job_type,start_date,end_date,latest_heartbeat,executor_class,hostname,unixname)
-        values ({dag.id},'success','LocalTaskJob','{start_date}','{end_date}','{end_date}','NoneType','FixerHost','ubuntu')
+        values ('{dag.id}','success','LocalTaskJob','{start_date}','{end_date}','{end_date}','NoneType','FixerHost','ubuntu')
     """
     statement = text(q_insert_job)
 
@@ -107,7 +107,7 @@ def create_new_task_instances(dag,job_id,execution_date):
         logger.info(f"Creating task instance: {ti}")
         q_insert_tis = f"""
             insert into task_instance(task_id,dag_id,execution_date,start_date,end_date,duration,state,try_number,hostname,unixname,job_id,pool,queue,priority_weight,queued_dttm,pid,max_tries,executor_config,pool_slots)
-            values ({ti},{dag.id},'{execution_date}','{ti_start_date}','{ti_end_date}',60,'success',1,'FixerHost','ubuntu',{job_id},'default_pool','airflow',1,'{ti_start_date}',12332,1,null,1)
+            values ('{ti}','{dag.id}','{execution_date}','{ti_start_date}','{ti_end_date}',60,'success',1,'FixerHost','ubuntu','{job_id}','default_pool','airflow',1,'{ti_start_date}',12332,1,null,1)
         """
 
         statement = text(q_insert_tis)
@@ -140,7 +140,7 @@ def create_new_dag_runs(dag,to_execution_date):
         #create new dag run in the db
         q_insert_dag_run = f"""
             insert into dag_run (dag_id,execution_date,state,run_id,external_trigger,conf,end_date,start_date)
-            values ({dag.id},'{next_execution_date}','success',{run_id},false,null,'{end_date}','{start_date}')
+            values ('{dag.id}','{next_execution_date}','success','{run_id}',false,null,'{end_date}','{start_date}')
         """
 
         statement = text(q_insert_dag_run)
