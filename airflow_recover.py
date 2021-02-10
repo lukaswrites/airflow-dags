@@ -58,7 +58,7 @@ def get_active_dags():
 
     dags_list = []
 
-    df.apply(lambda row: dags_list.append(Dag(row['id']))
+    df.apply(lambda row: dags_list.append(Dag(row['id'])))
 
     logger.info(f"Found {len(dags_list)} active dags")
 
