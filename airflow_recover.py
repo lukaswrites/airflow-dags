@@ -140,7 +140,7 @@ def create_new_dag_runs(dag,to_execution_date):
         #create new dag run in the db
         q_insert_dag_run = f"""
             insert into dag_run (dag_id,execution_date,state,run_id,external_trigger,conf,end_date,start_date)
-            values ({dag.id},{next_execution},'success',{run_id},false,null,{end_date},{start_date})
+            values ({dag.id},{next_execution_date},'success',{run_id},false,null,{end_date},{start_date})
         """
 
         statement = text(q_insert_dag_run)
