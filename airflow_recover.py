@@ -91,8 +91,8 @@ def create_new_job(dag,execution_date,start_date,end_date):
 
     rs = conn.execute(text(q_job_id))
 
-    job_id = rs[0][0]
-    logger.info(f"Job id {job_id} created")
+    job_id = [row[0] for row in rs]
+    logger.info(f"Job id {job_id[0]} created")
 
     return job_id
 
