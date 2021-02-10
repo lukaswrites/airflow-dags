@@ -33,8 +33,8 @@ conn = engine.connect()
 def get_next_execution_date(dag):
     res = subprocess.run(["airflow","next_execution",dag.id],capture_output=True)
     next_execution_date_str = str(res.stdout).split("\\n")[-2]
-    next_exec_date = next_execution_date_str[next_execution_date_str.find("[")+1:next_execution_date_str.find("]")]
-    return next_exec_date
+
+    return next_execution_date_str
 
 def pause_dag(dag):
     logger.info(f"Pausing dag: {dag.id}")
@@ -121,11 +121,10 @@ def create_new_dag_runs(dag,to_execution_date):
     while (True):
         
         next_execution_date_str = get_next_execution_date(dag)
-        logger.info(f"exec date:{next_execution_date_str}")
         next_execution_date = datetime.datetime.strptime(next_execution_date_str,"%Y-%m-%d %H:%M:%S%z")
 
         if next_execution_date >= to_execution_date:
-            break
+            break;
         
         logger.info(f"Creating dag run for {dag.id}")
         run_id = 'scheduled__'+next_execution_date_str.replace(' ','T')
