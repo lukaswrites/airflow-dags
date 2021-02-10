@@ -166,7 +166,7 @@ def recover_airflow(hour):
     active_dags = get_active_dags()
 
     #get nearest hour back from present hour
-    to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(hours=hour)
+    to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
 
     for dag in active_dags:
         backfill_dag(dag,to_execution_date)
