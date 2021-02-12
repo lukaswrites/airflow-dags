@@ -16,6 +16,7 @@ import datetime
 import pytz
 
 from multiprocessing import Pool
+import multiprocessing
 
 class Dag:
     def __init__(self,id,last_exec_date):
