@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import text
+from croniter import croniter
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -15,8 +16,9 @@ import datetime
 import pytz
 
 class Dag:
-    def __init__(self,id):
+    def __init__(self,id,last_exec_date):
         self.id = id
+        self.last_exec_date = last_exec_date
         self.task_instances = []
 
 db_creds = {}
@@ -32,10 +34,15 @@ engine = create_engine(url)
 conn = engine.connect()
 
 def get_next_execution_date(dag):
-    res = subprocess.run(["airflow","next_execution",dag.id],capture_output=True)
-    next_execution_date_str = str(res.stdout).split("\\n")[-2]
+    #res = subprocess.run(["airflow","next_execution",dag.id],capture_output=True)
+    #next_execution_date_str = str(res.stdout).split("\\n")[-2]
 
-    return next_execution_date_str
+    last_exec_date = datetime.datetime.strptime(dag.last_exec_date,"%Y-%m-%d %H:%M:%S%z")
+    iter = croniter('*/5 * * * *', last_exec_date)
+    next_exec_date = iter.get_next(datetime)
+    return next_exec_date
+
+    #return next_execution_date_str
 
 def pause_dag(dag):
     logger.info(f"Pausing dag: {dag.id}")
@@ -55,12 +62,20 @@ def resume_dag(dag):
 
 def get_active_dags():
     #get active dags and their last successfull execution date
-    q_active_dags = "select distinct dag_id as id from dag where is_active=true and is_paused=false"
+    q_active_dags = """with x as (
+                        select a.dag_id as id,b.execution_date, row_number() over(partition by a.dag_id order by b.execution_date desc) as rn 
+                        from dag a 
+                        left join dag_run b on a.dag_id=b.dag_id
+                        where a.is_active=true and a.is_paused=false)
+
+                        select id,execution_date from x where rn = 1
+                        
+                        """
     df = pd.read_sql(q_active_dags,con=conn)
 
     dags_list = []
 
-    df.apply(lambda row: dags_list.append(Dag(row['id'])),axis=1)
+    df.apply(lambda row: dags_list.append(Dag(row['id'],row['execution_date'])),axis=1)
 
     logger.info(f"Found {len(dags_list)} active dags")
 
@@ -121,8 +136,8 @@ def create_new_dag_runs(dag,to_execution_date):
 
     while (True):
         
-        next_execution_date_str = get_next_execution_date(dag)
-        next_execution_date = datetime.datetime.strptime(next_execution_date_str,"%Y-%m-%d %H:%M:%S%z")
+        next_execution_date = get_next_execution_date(dag)
+        #next_execution_date = datetime.datetime.strptime(next_execution_date_str,"%Y-%m-%d %H:%M:%S%z")
 
         utc=pytz.UTC
         if next_execution_date >= utc.localize(to_execution_date):
