@@ -188,7 +188,7 @@ def recover_airflow(hour):
     to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
 
     with multiprocessing.Pool(processes=5) as pool:
-        pool.starmap(backfill_dag,dag,to_execution_date)
+        pool.starmap(backfill_dag,active_dags,to_execution_date)
         
 
 if __name__=='__main__':
