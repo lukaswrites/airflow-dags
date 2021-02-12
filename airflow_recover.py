@@ -33,8 +33,7 @@ db_creds['port'] = 5432
 
 url = URL(username=db_creds['user'], host=db_creds['host'], port=db_creds['port'],
                 password=db_creds['password'], drivername='postgres', database='cloud_user')
-engine = create_engine(url)
-conn = engine.connect()
+
 
 def get_next_execution_date(dag):
     #res = subprocess.run(["airflow","next_execution",dag.id],capture_output=True)
@@ -175,10 +174,14 @@ def create_new_dag_runs(dag,to_execution_date):
     logger.info(f"Processing Dag {dag.id} has been completed")
 
 def backfill_dag(dag):
+    engine = create_engine(url)
+    conn = engine.connect()
     to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
     pause_dag(dag)
     create_new_dag_runs(dag,to_execution_date)
     resume_dag(dag)
+    conn.close()
+    engine.dispose()
     
 
 def recover_airflow(hour):
@@ -188,14 +191,13 @@ def recover_airflow(hour):
     #get nearest hour back from present hour
     to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
 
-    with multiprocessing.Pool(processes=5) as pool:
+    with multiprocessing.Pool(processes=10) as pool:
         pool.map(backfill_dag,active_dags)
         
 
 if __name__=='__main__':
     recover_airflow(1)
-    conn.close()
-    engine.dispose()
+    
 
 
 
