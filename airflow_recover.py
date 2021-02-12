@@ -194,6 +194,8 @@ def recover_airflow(hour):
 
 if __name__=='__main__':
     recover_airflow(1)
+    conn.close()
+    engine.dispose()
 
 
 
