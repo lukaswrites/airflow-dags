@@ -39,7 +39,7 @@ def get_next_execution_date(dag):
 
     last_exec_date = dag.last_exec_date #datetime.datetime.strptime(dag.last_exec_date,"%Y-%m-%d %H:%M:%S%z")
     iter = croniter('*/5 * * * *', last_exec_date)
-    next_exec_date = iter.get_next(datetime)
+    next_exec_date = iter.get_next(datetime.datetime)
     return next_exec_date
 
     #return next_execution_date_str
