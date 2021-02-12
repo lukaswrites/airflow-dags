@@ -173,7 +173,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
     
     logger.info(f"Processing Dag {dag.id} has been completed")
 
-def backfill_dag(dag,conn):
+def backfill_dag(dag):
     engine = create_engine(url)
     conn = engine.connect()
     to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
