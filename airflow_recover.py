@@ -144,7 +144,7 @@ def create_new_dag_runs(dag,to_execution_date):
             break;
         
         logger.info(f"Creating dag run for {dag.id}")
-        run_id = 'scheduled__'+next_execution_date_str.replace(' ','T')
+        run_id = 'scheduled__'+str(next_execution_date)
 
         start_date = next_execution_date + datetime.timedelta(minutes=1)
         end_date = start_date + datetime.timedelta(minutes=1)
