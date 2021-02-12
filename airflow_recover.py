@@ -37,7 +37,7 @@ def get_next_execution_date(dag):
     #res = subprocess.run(["airflow","next_execution",dag.id],capture_output=True)
     #next_execution_date_str = str(res.stdout).split("\\n")[-2]
 
-    last_exec_date = datetime.datetime.strptime(dag.last_exec_date,"%Y-%m-%d %H:%M:%S%z")
+    last_exec_date = dag.last_exec_date #datetime.datetime.strptime(dag.last_exec_date,"%Y-%m-%d %H:%M:%S%z")
     iter = croniter('*/5 * * * *', last_exec_date)
     next_exec_date = iter.get_next(datetime)
     return next_exec_date
