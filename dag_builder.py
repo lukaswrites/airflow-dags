@@ -37,7 +37,7 @@ default_args = {
 dag_bag = []
 
 
-for i in range(64):
+for i in range(128):
     dag_id = 'dag_id'+str(i)
     dag = DAG(
         'dag_id'+str(i),
