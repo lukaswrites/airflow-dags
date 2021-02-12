@@ -15,6 +15,8 @@ import subprocess
 import datetime
 import pytz
 
+from multiprocessing import Pool
+
 class Dag:
     def __init__(self,id,last_exec_date):
         self.id = id
@@ -184,9 +186,9 @@ def recover_airflow(hour):
     #get nearest hour back from present hour
     to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
 
-    for dag in active_dags:
-        backfill_dag(dag,to_execution_date)
-
+    with multiprocessing.Pool(processes=5) as pool:
+        pool.starmap(backfill_dag,dag,to_execution_date)
+        
 
 if __name__=='__main__':
     recover_airflow(1)
