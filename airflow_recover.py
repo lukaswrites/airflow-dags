@@ -63,7 +63,7 @@ def resume_dag(dag):
     else:
         logger.info(f"Dag {dag.id} resumed")
 
-def get_active_dags():
+def get_active_dags(conn):
     #get active dags and their last successfull execution date
     q_active_dags = """with x as (
                         select a.dag_id as id,b.execution_date, row_number() over(partition by a.dag_id order by b.execution_date desc) as rn 
@@ -94,7 +94,7 @@ def get_active_dags():
 def execute_task():
     pass
 
-def create_new_job(dag,execution_date,start_date,end_date):
+def create_new_job(dag,execution_date,start_date,end_date,conn):
     logger.info(f"Creating job id for dag {dag.id}")
 
     q_insert_job = f"""
@@ -115,7 +115,7 @@ def create_new_job(dag,execution_date,start_date,end_date):
     return job_id[0]
 
 
-def create_new_task_instances(dag,job_id,execution_date):
+def create_new_task_instances(dag,job_id,execution_date,conn):
     logger.info(f"Creating task instances for Dag {dag.id} with job_id {job_id}")
 
     ti_start_date = execution_date
@@ -135,7 +135,7 @@ def create_new_task_instances(dag,job_id,execution_date):
         logger.info(f"Task instance {ti} created")
 
 
-def create_new_dag_runs(dag,to_execution_date):
+def create_new_dag_runs(dag,to_execution_date,conn):
 
     while (True):
         
@@ -167,18 +167,18 @@ def create_new_dag_runs(dag,to_execution_date):
 
         logger.info(f"Dag run with execution_date {next_execution_date} created")
 
-        job_id = create_new_job(dag,next_execution_date,start_date,end_date)
-        create_new_task_instances(dag,job_id,next_execution_date)
+        job_id = create_new_job(dag,next_execution_date,start_date,end_date,conn)
+        create_new_task_instances(dag,job_id,next_execution_date,conn)
 
     
     logger.info(f"Processing Dag {dag.id} has been completed")
 
-def backfill_dag(dag):
+def backfill_dag(dag,conn):
     engine = create_engine(url)
     conn = engine.connect()
     to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
     pause_dag(dag)
-    create_new_dag_runs(dag,to_execution_date)
+    create_new_dag_runs(dag,to_execution_date,conn)
     resume_dag(dag)
     conn.close()
     engine.dispose()
@@ -186,7 +186,9 @@ def backfill_dag(dag):
 
 def recover_airflow(hour):
     #:param hour: up to how many hour before present hour
-    active_dags = get_active_dags()
+    engine = create_engine(url)
+    conn = engine.connect()
+    active_dags = get_active_dags(conn)
 
     #get nearest hour back from present hour
     to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
