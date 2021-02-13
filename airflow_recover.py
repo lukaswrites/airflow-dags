@@ -145,6 +145,8 @@ def create_new_dag_runs(dag,to_execution_date,conn):
 
     iterate = 0
 
+    utc=pytz.UTC
+
     total = (utc.localize(to_execution_date) - dag.last_exec_date).total_seconds() / 60.0 / 5
 
     def printProgressBar (iteration):
@@ -160,7 +162,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
         next_execution_date = get_next_execution_date(dag)
         #next_execution_date = datetime.datetime.strptime(next_execution_date_str,"%Y-%m-%d %H:%M:%S%z")
 
-        utc=pytz.UTC
+        
         if next_execution_date >= utc.localize(to_execution_date):
             break;
         
