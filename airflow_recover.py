@@ -220,7 +220,7 @@ def recover_airflow(hour):
     #get nearest hour back from present hour
     to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
 
-    with multiprocessing.Pool(processes=20) as pool:
+    with multiprocessing.Pool(processes=10) as pool:
         pool.map(backfill_dag,active_dags)
         
 
