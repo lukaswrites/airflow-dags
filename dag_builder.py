@@ -11,7 +11,7 @@ import pandas as pd
 def transform_task(sleep_time):
     c_size = 200000
 
-    for c_df in pd.read_csv('s3://kuhontol/test.csv.gz', compression='gzip', header=0, chunksize=c_size,nrows=10000):
+    for c_df in pd.read_csv('s3://kuhontol3/test.csv.gz', compression='gzip', header=0, chunksize=c_size,nrows=10000):
         df_exploded = c_df['records'].apply(pd.Series)
 
 
@@ -51,7 +51,7 @@ for i in range(128):
     
     us_task = None
 
-    for j in range(10):
+    for j in range(128):
         ds_task = PythonOperator(
             task_id = 'task_id_'+str(j),
             python_callable=long_process,

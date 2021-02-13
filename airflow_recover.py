@@ -25,7 +25,7 @@ class Dag:
         self.task_instances = []
 
 db_creds = {}
-db_creds['host'] = '54.166.38.182'
+db_creds['host'] = 'database-1.cd2kthfdyfyp.us-east-1.rds.amazonaws.com'
 db_creds['user'] = 'cloud_user'
 db_creds['password'] = 'cybersoft'
 db_creds['port'] = 5432
@@ -33,6 +33,35 @@ db_creds['port'] = 5432
 
 url = URL(username=db_creds['user'], host=db_creds['host'], port=db_creds['port'],
                 password=db_creds['password'], drivername='postgres', database='cloud_user')
+
+def progressBar(iterable, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    total = len(iterable)
+    # Progress Bar Printing Function
+    def printProgressBar (iteration):
+        percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+        filledLength = int(length * iteration // total)
+        bar = fill * filledLength + '-' * (length - filledLength)
+        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    # Initial Call
+    printProgressBar(0)
+    # Update Progress Bar
+    for i, item in enumerate(iterable):
+        yield item
+        printProgressBar(i + 1)
+    # Print New Line on Complete
+    print()
 
 
 def get_next_execution_date(dag):
@@ -48,20 +77,20 @@ def get_next_execution_date(dag):
     #return next_execution_date_str
 
 def pause_dag(dag):
-    logger.info(f"Pausing dag: {dag.id}")
+    logger.info(f"{dag.id}: Pausing DAG")
     res = subprocess.run(["airflow","pause",dag.id],capture_output=True)
     if res.returncode > 0:
         raise Exception(f"failed to pause dag {dag.id}")
     else:
-        logger.info(f"Dag {dag.id} paused")
+        logger.info(f"{dag.id}: Dag paused")
 
 def resume_dag(dag):
-    logger.info(f"Resume dag: {dag.id}")
+    logger.info(f"{dag.id}: Resuming DAG")
     res = subprocess.run(["airflow","unpause",dag.id],capture_output=True)
     if res.returncode > 0:
         raise Exception(f"failed to resume dag {dag.id}")
     else:
-        logger.info(f"Dag {dag.id} resumed")
+        logger.info(f"{dag.id}: DAG resumed")
 
 def get_active_dags(conn):
     #get active dags and their last successfull execution date
@@ -83,11 +112,11 @@ def get_active_dags(conn):
     logger.info(f"Found {len(dags_list)} active dags")
 
     for dag in dags_list:
-        logger.info(f"Getting task instances for {dag.id}")
+        logger.info(f"{dag.id}: Getting tasks instances")
         q_task_instances = f"select distinct task_id from task_instance where dag_id = '{dag.id}'"
         task_instances = pd.read_sql(q_task_instances,con=conn)
         dag.task_instances = task_instances['task_id'].values.tolist()
-        logger.info(f"Found {len(task_instances)} task instances for {dag.id}")
+        logger.info(f"{dag.id}: Found {len(task_instances)} task instances")
 
     return dags_list
 
@@ -95,7 +124,7 @@ def execute_task():
     pass
 
 def create_new_job(dag,execution_date,start_date,end_date,conn):
-    logger.info(f"Creating job id for dag {dag.id}")
+    logger.info(f"{dag.id}: Creating job")
 
     q_insert_job = f"""
         insert into job (dag_id,state,job_type,start_date,end_date,latest_heartbeat,executor_class,hostname,unixname)
@@ -110,19 +139,18 @@ def create_new_job(dag,execution_date,start_date,end_date,conn):
     rs = conn.execute(text(q_job_id))
 
     job_id = [row[0] for row in rs]
-    logger.info(f"Job id {job_id[0]} created")
+    logger.info(f"{dag.id}: Job id {job_id[0]} created")
 
     return job_id[0]
 
 
 def create_new_task_instances(dag,job_id,execution_date,conn):
-    logger.info(f"Creating task instances for Dag {dag.id} with job_id {job_id}")
 
     ti_start_date = execution_date
     ti_end_date = ti_start_date + datetime.timedelta(minutes=1)
 
-    for ti in dag.task_instances:
-        logger.info(f"Creating task instance: {ti}")
+    
+    for ti in progressBar(dag.task_instances, prefix = f'{dag.id} Creating TIs:', suffix = 'Complete', length = 50):
         q_insert_tis = f"""
             insert into task_instance(task_id,dag_id,execution_date,start_date,end_date,duration,state,try_number,hostname,unixname,job_id,pool,queue,priority_weight,queued_dttm,pid,max_tries,executor_config,pool_slots)
             values ('{ti}','{dag.id}','{execution_date}','{ti_start_date}','{ti_end_date}',60,'success',1,'FixerHost','ubuntu','{job_id}','default_pool','airflow',1,'{ti_start_date}',12332,1,null,1)
@@ -132,7 +160,6 @@ def create_new_task_instances(dag,job_id,execution_date,conn):
 
         conn.execute(statement)
 
-        logger.info(f"Task instance {ti} created")
 
 
 def create_new_dag_runs(dag,to_execution_date,conn):
@@ -146,7 +173,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
         if next_execution_date >= utc.localize(to_execution_date):
             break;
         
-        logger.info(f"Creating dag run for {dag.id}")
+        logger.info(f"{dag.id}: Creating DAG run")
         run_id = 'scheduled__'+str(next_execution_date)
 
         start_date = next_execution_date + datetime.timedelta(minutes=1)
@@ -165,7 +192,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
 
         conn.execute(statement)
 
-        logger.info(f"Dag run with execution_date {next_execution_date} created")
+        logger.info(f"{dag.id}: DAG run with execution_date {next_execution_date} created")
 
         job_id = create_new_job(dag,next_execution_date,start_date,end_date,conn)
         create_new_task_instances(dag,job_id,next_execution_date,conn)
@@ -193,7 +220,7 @@ def recover_airflow(hour):
     #get nearest hour back from present hour
     to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
 
-    with multiprocessing.Pool(processes=10) as pool:
+    with multiprocessing.Pool(processes=20) as pool:
         pool.map(backfill_dag,active_dags)
         
 
