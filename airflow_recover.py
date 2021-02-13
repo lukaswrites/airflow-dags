@@ -189,7 +189,6 @@ def create_new_dag_runs(dag,to_execution_date,conn):
 
         
         if next_execution_date >= utc.localize(to_execution_date):
-            print()
             break;
         
         #logger.info(f"{dag.id}: Creating DAG run")
