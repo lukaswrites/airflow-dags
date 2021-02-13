@@ -62,20 +62,20 @@ def get_next_execution_date(dag):
     #return next_execution_date_str
 
 def pause_dag(dag):
-    logger.info(f"{dag.id}: Pausing DAG")
+    #logger.info(f"{dag.id}: Pausing DAG")
     res = subprocess.run(["airflow","pause",dag.id],capture_output=True)
     if res.returncode > 0:
         raise Exception(f"failed to pause dag {dag.id}")
-    else:
-        logger.info(f"{dag.id}: DAG Paused")
+    #else:
+    #    logger.info(f"{dag.id}: DAG Paused")
 
 def resume_dag(dag):
-    logger.info(f"{dag.id}: Resuming DAG")
+    #logger.info(f"{dag.id}: Resuming DAG")
     res = subprocess.run(["airflow","unpause",dag.id],capture_output=True)
     if res.returncode > 0:
         raise Exception(f"failed to resume dag {dag.id}")
-    else:
-        logger.info(f"{dag.id}: DAG Resumed")
+    #else:
+    #    logger.info(f"{dag.id}: DAG Resumed")
 
 def get_active_dags(conn):
     #get active dags and their last successfull execution date
@@ -97,11 +97,11 @@ def get_active_dags(conn):
     logger.info(f"Found {len(dags_list)} active dags")
 
     for dag in dags_list:
-        logger.info(f"{dag.id}: Getting tasks instances")
+        #logger.info(f"{dag.id}: Getting tasks instances")
         q_task_instances = f"select distinct task_id from task_instance where dag_id = '{dag.id}'"
         task_instances = pd.read_sql(q_task_instances,con=conn)
         dag.task_instances = task_instances['task_id'].values.tolist()
-        logger.info(f"{dag.id}: Found {len(task_instances)} task instances")
+        #logger.info(f"{dag.id}: Found {len(task_instances)} task instances")
 
     return dags_list
 
@@ -235,6 +235,7 @@ def backfill_dag(dag):
 
 def recover_airflow(hour):
     #:param hour: up to how many hour before present hour
+    system('clear')
     engine = create_engine(url)
     conn = engine.connect()
     active_dags = get_active_dags(conn)
