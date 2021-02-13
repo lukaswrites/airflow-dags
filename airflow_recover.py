@@ -147,6 +147,8 @@ def create_new_dag_runs(dag,to_execution_date,conn):
 
     iterate = 1
 
+    term_pos = term_pos + 10
+
     utc=pytz.UTC
 
     total = (utc.localize(to_execution_date) - dag.last_exec_date).total_seconds() / 60.0 / 5
@@ -155,7 +157,6 @@ def create_new_dag_runs(dag,to_execution_date,conn):
         percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
         filledLength = int(length * iteration // total)
         bar = fill * filledLength + '-' * (length - filledLength)
-        term_pos = term_pos + 10
         with term.location(0, term_pos):
             print(f'\r{prefix} |{bar}| {percent}% {suffix}\n', end = printEnd)
 
