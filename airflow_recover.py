@@ -16,7 +16,7 @@ import subprocess
 import datetime
 import pytz
 
-from multiprocessing import Pool
+from multiprocessing import Pool, Value
 import multiprocessing
 
 import random
@@ -41,6 +41,10 @@ url = URL(username=db_creds['user'], host=db_creds['host'], port=db_creds['port'
 
 term_pos = 0
 term = Terminal()
+
+def init_term_pos(args):
+    global term_pos
+    term_pos = args
 
 def get_next_execution_date(dag):
     #res = subprocess.run(["airflow","next_execution",dag.id],capture_output=True)
@@ -152,7 +156,8 @@ def create_new_dag_runs(dag,to_execution_date,conn):
     iterate = 1
 
     global term_pos
-    term_pos = term_pos + 10
+    with term_pos.get_lock():
+        term_pos += 1
 
     utc=pytz.UTC
 
@@ -163,7 +168,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
         filledLength = int(length * iteration // total)
         bar = fill * filledLength + '-' * (length - filledLength)
         with term.location(0, term_pos):
-            print(f'{prefix} |{bar}| {percent}% {suffix}')
+            print(f'{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
 
     #printProgressBar(iterate)
 
@@ -210,7 +215,6 @@ def create_new_dag_runs(dag,to_execution_date,conn):
 
 
 def backfill_dag(dag):
-    time.sleep(random.randint(1,10))
     engine = create_engine(url)
     conn = engine.connect()
     to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
@@ -230,7 +234,8 @@ def recover_airflow(hour):
     #get nearest hour back from present hour
     to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
 
-    with multiprocessing.Pool(processes=10) as pool:
+    term_pos = Value('i',0)
+    with multiprocessing.Pool(processes=10,initializer=init_term_pos,initargs=(term_pos,)) as pool:
         pool.map(backfill_dag,active_dags)
         
 
