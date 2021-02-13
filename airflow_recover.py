@@ -210,8 +210,6 @@ def create_new_dag_runs(dag,to_execution_date,conn):
 
         iterate = iterate + 1
 
-        if iterate == 10:
-            print('\r')
 
 
 def backfill_dag(dag):
