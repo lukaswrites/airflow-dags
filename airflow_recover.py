@@ -5,6 +5,8 @@ from sqlalchemy.sql import text
 from croniter import croniter
 from blessings import Terminal
 
+import copy
+
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__file__)
@@ -161,7 +163,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
     with term_pos.get_lock():
         term_pos.value += 1
     
-    curr_term_height = term.height
+    curr_term_height = copy.copy(term.height)
     local_term_pos = term_pos.value 
 
     utc=pytz.UTC
