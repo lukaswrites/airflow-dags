@@ -34,34 +34,6 @@ db_creds['port'] = 5432
 url = URL(username=db_creds['user'], host=db_creds['host'], port=db_creds['port'],
                 password=db_creds['password'], drivername='postgres', database='cloud_user')
 
-def progressBar(iterable, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
-    """
-    Call in a loop to create terminal progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals in percent complete (Int)
-        length      - Optional  : character length of bar (Int)
-        fill        - Optional  : bar fill character (Str)
-        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
-    """
-    total = len(iterable)
-    # Progress Bar Printing Function
-    def printProgressBar (iteration):
-        percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-        filledLength = int(length * iteration // total)
-        bar = fill * filledLength + '-' * (length - filledLength)
-        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
-    # Initial Call
-    printProgressBar(0)
-    # Update Progress Bar
-    for i, item in enumerate(iterable):
-        yield item
-        printProgressBar(i + 1)
-    # Print New Line on Complete
-    print()
 
 
 def get_next_execution_date(dag):
@@ -150,7 +122,7 @@ def create_new_task_instances(dag,job_id,execution_date,conn):
     ti_end_date = ti_start_date + datetime.timedelta(minutes=1)
 
     
-    for ti in progressBar(dag.task_instances, prefix = f'{dag.id} Creating TIs:', suffix = 'Complete', length = 50):
+    for ti in in dag.task_instances:
         q_insert_tis = f"""
             insert into task_instance(task_id,dag_id,execution_date,start_date,end_date,duration,state,try_number,hostname,unixname,job_id,pool,queue,priority_weight,queued_dttm,pid,max_tries,executor_config,pool_slots)
             values ('{ti}','{dag.id}','{execution_date}','{ti_start_date}','{ti_end_date}',60,'success',1,'FixerHost','ubuntu','{job_id}','default_pool','airflow',1,'{ti_start_date}',12332,1,null,1)
@@ -163,6 +135,25 @@ def create_new_task_instances(dag,job_id,execution_date,conn):
 
 
 def create_new_dag_runs(dag,to_execution_date,conn):
+
+    prefix = f'{dag.id} Creating TIs:'
+    suffix = 'Complete' 
+    decimals = 1 
+    length = 100
+    fill = '█'
+    printEnd = "\r"
+
+    iterate = 0
+
+    total = (utc.localize(to_execution_date) - dag.last_exec_date).total_seconds() / 60.0 / 5
+
+    def printProgressBar (iteration):
+        percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+        filledLength = int(length * iteration // total)
+        bar = fill * filledLength + '-' * (length - filledLength)
+        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+
+    printProgressBar(iterate)
 
     while (True):
         
@@ -192,13 +183,15 @@ def create_new_dag_runs(dag,to_execution_date,conn):
 
         conn.execute(statement)
 
-        logger.info(f"{dag.id}: DAG run with execution_date {next_execution_date} created")
+        #logger.info(f"{dag.id}: DAG run with execution_date {next_execution_date} created")
 
         job_id = create_new_job(dag,next_execution_date,start_date,end_date,conn)
         create_new_task_instances(dag,job_id,next_execution_date,conn)
 
-    
-    logger.info(f"Processing Dag {dag.id} has been completed")
+        printProgressBar()
+
+        iterate = iterate + 1
+
 
 def backfill_dag(dag):
     engine = create_engine(url)
