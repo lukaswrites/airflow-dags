@@ -171,7 +171,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
 
     utc=pytz.UTC
 
-    total = (utc.localize(to_execution_date) - dag.last_exec_date).total_seconds() / 60.0 / 5
+    total = (utc.localize(to_execution_date) - dag.last_exec_date).total_seconds() / 60.0 / 5.0
 
     def printProgressBar (iteration):
         percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
