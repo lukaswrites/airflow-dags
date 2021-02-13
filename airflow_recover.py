@@ -171,7 +171,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
         percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
         filledLength = int(length * iteration // total)
         bar = fill * filledLength + '-' * (length - filledLength)
-        with term.location(0, local_term_pos):
+        with term.location(0, term.height - local_term_pos):
             print(f'{prefix} |{bar}| {percent}% {suffix}')
 
     #printProgressBar(iterate)
