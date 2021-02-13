@@ -163,9 +163,10 @@ def create_new_dag_runs(dag,to_execution_date,conn):
     with term_pos.get_lock():
         term_pos.value += 1
     
-    curr_term_height = copy.copy(term.height)
+    curr_term_height = copy.deepcopy(term.height)
     local_term_pos = term_pos.value 
     local_term_pos += curr_term_height
+   
 
     utc=pytz.UTC
 
