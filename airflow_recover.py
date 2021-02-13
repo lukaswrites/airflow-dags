@@ -39,7 +39,7 @@ db_creds['port'] = 5432
 url = URL(username=db_creds['user'], host=db_creds['host'], port=db_creds['port'],
                 password=db_creds['password'], drivername='postgres', database='cloud_user')
 
-term_pos = 0
+term_pos = None
 term = Terminal()
 
 def init_term_pos(args):
@@ -167,7 +167,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
         percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
         filledLength = int(length * iteration // total)
         bar = fill * filledLength + '-' * (length - filledLength)
-        with term.location(0, term_pos):
+        with term.location(0, term_pos.value):
             print(f'{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
 
     #printProgressBar(iterate)
