@@ -163,8 +163,8 @@ def create_new_dag_runs(dag,to_execution_date,conn):
     with term_pos.get_lock():
         term_pos.value += 1
     
-    curr_term_height = copy.deepcopy(term.height)
-    local_term_pos = term_pos.value 
+    curr_term_height = copy.copy(term.height)
+    local_term_pos = term_pos.value + curr_term_height
 
     utc=pytz.UTC
 
@@ -174,7 +174,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
         percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
         filledLength = int(length * iteration // total)
         bar = fill * filledLength + '-' * (length - filledLength)
-        with term.location(0, local_term_pos + curr_term_height):
+        with term.location(0, local_term_pos):
             print(f'{prefix} |{bar}| {percent}% {suffix}')
 
     #printProgressBar(iterate)
