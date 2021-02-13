@@ -157,7 +157,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
 
     global term_pos
     with term_pos.get_lock():
-        term_pos += 1
+        term_pos.value += 1
 
     utc=pytz.UTC
 
