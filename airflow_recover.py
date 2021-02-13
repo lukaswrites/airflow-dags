@@ -25,7 +25,7 @@ class Dag:
         self.task_instances = []
 
 db_creds = {}
-db_creds['host'] = '54.169.197.249'
+db_creds['host'] = '54.166.38.182'
 db_creds['user'] = 'cloud_user'
 db_creds['password'] = 'cybersoft'
 db_creds['port'] = 5432
