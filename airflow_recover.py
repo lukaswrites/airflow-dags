@@ -19,6 +19,10 @@ import pytz
 from multiprocessing import Pool
 import multiprocessing
 
+import random
+
+import time
+
 class Dag:
     def __init__(self,id,last_exec_date):
         self.id = id
@@ -206,6 +210,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
 
 
 def backfill_dag(dag):
+    time.sleep(random.randint(1,10))
     engine = create_engine(url)
     conn = engine.connect()
     to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
