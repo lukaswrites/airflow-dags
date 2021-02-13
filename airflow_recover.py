@@ -149,7 +149,7 @@ def create_new_task_instances(dag,job_id,execution_date,conn):
 
 def create_new_dag_runs(dag,to_execution_date,conn):
 
-    prefix = f'{dag.id} Creating TIs:'
+    prefix = f'{dag.id}  -  Creating TIs:'
     suffix = 'Complete' 
     decimals = 1 
     length = 100
