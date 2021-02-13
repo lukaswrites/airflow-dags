@@ -25,7 +25,7 @@ class Dag:
         self.task_instances = []
 
 db_creds = {}
-db_creds['host'] = 'database-2.comfcrvmgvqg.us-east-1.rds.amazonaws.com'
+db_creds['host'] = '54.169.197.249'
 db_creds['user'] = 'cloud_user'
 db_creds['password'] = 'cybersoft'
 db_creds['port'] = 5432
@@ -105,8 +105,8 @@ def create_new_job(dag,execution_date,start_date,end_date,conn):
 
     conn.execute(statement)
 
+    
     q_job_id = "select max(id) from job"
-
     rs = conn.execute(text(q_job_id))
 
     job_id = [row[0] for row in rs]
