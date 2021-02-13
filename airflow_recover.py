@@ -143,7 +143,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
     fill = '█'
     printEnd = "\r"
 
-    iterate = 0
+    iterate = 1
 
     utc=pytz.UTC
 
@@ -153,9 +153,9 @@ def create_new_dag_runs(dag,to_execution_date,conn):
         percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
         filledLength = int(length * iteration // total)
         bar = fill * filledLength + '-' * (length - filledLength)
-        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+        print(f'\r{prefix} |{bar}| {percent}% {suffix}\n', end = printEnd)
 
-    printProgressBar(iterate)
+    #printProgressBar(iterate)
 
     while (True):
         
@@ -164,6 +164,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
 
         
         if next_execution_date >= utc.localize(to_execution_date):
+            print()
             break;
         
         #logger.info(f"{dag.id}: Creating DAG run")
