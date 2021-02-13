@@ -122,7 +122,7 @@ def create_new_task_instances(dag,job_id,execution_date,conn):
     ti_end_date = ti_start_date + datetime.timedelta(minutes=1)
 
     
-    for ti in in dag.task_instances:
+    for ti in dag.task_instances:
         q_insert_tis = f"""
             insert into task_instance(task_id,dag_id,execution_date,start_date,end_date,duration,state,try_number,hostname,unixname,job_id,pool,queue,priority_weight,queued_dttm,pid,max_tries,executor_config,pool_slots)
             values ('{ti}','{dag.id}','{execution_date}','{ti_start_date}','{ti_end_date}',60,'success',1,'FixerHost','ubuntu','{job_id}','default_pool','airflow',1,'{ti_start_date}',12332,1,null,1)
