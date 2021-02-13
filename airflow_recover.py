@@ -3,6 +3,7 @@ from sqlalchemy.engine.url import URL
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import text
 from croniter import croniter
+from blessings import Terminal
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -34,7 +35,8 @@ db_creds['port'] = 5432
 url = URL(username=db_creds['user'], host=db_creds['host'], port=db_creds['port'],
                 password=db_creds['password'], drivername='postgres', database='cloud_user')
 
-
+term_pos = 0
+term = Terminal()
 
 def get_next_execution_date(dag):
     #res = subprocess.run(["airflow","next_execution",dag.id],capture_output=True)
@@ -153,7 +155,9 @@ def create_new_dag_runs(dag,to_execution_date,conn):
         percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
         filledLength = int(length * iteration // total)
         bar = fill * filledLength + '-' * (length - filledLength)
-        print(f'\r{prefix} |{bar}| {percent}% {suffix}\n', end = printEnd)
+        term_pos = term_pos + 10
+        with term.location(0, term_pos):
+            print(f'\r{prefix} |{bar}| {percent}% {suffix}\n', end = printEnd)
 
     #printProgressBar(iterate)
 
