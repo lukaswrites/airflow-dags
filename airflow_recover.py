@@ -236,7 +236,8 @@ def recover_airflow(hour):
 
     term_pos = Value('i',0)
     with multiprocessing.Pool(processes=10,initializer=init_term_pos,initargs=(term_pos,)) as pool:
-        pool.map_async(backfill_dag,active_dags)
+        i = pool.map_async(backfill_dag,active_dags)
+        i.wait()
         
 
 if __name__=='__main__':
