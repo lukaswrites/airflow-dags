@@ -161,7 +161,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
     with term_pos.get_lock():
         term_pos.value += 1
     
-    local_term_pos = term_pos.value + term.height
+    local_term_pos = term_pos.value + (term.height -1)
 
     utc=pytz.UTC
 
