@@ -96,7 +96,7 @@ def execute_task():
     pass
 
 def create_new_job(dag,execution_date,start_date,end_date,conn):
-    logger.info(f"{dag.id}: Creating job")
+    #logger.info(f"{dag.id}: Creating job")
 
     q_insert_job = f"""
         insert into job (dag_id,state,job_type,start_date,end_date,latest_heartbeat,executor_class,hostname,unixname)
@@ -111,7 +111,7 @@ def create_new_job(dag,execution_date,start_date,end_date,conn):
     rs = conn.execute(text(q_job_id))
 
     job_id = [row[0] for row in rs]
-    logger.info(f"{dag.id}: Job id {job_id[0]} created")
+    #logger.info(f"{dag.id}: Job id {job_id[0]} created")
 
     return job_id[0]
 
@@ -166,7 +166,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
         if next_execution_date >= utc.localize(to_execution_date):
             break;
         
-        logger.info(f"{dag.id}: Creating DAG run")
+        #logger.info(f"{dag.id}: Creating DAG run")
         run_id = 'scheduled__'+str(next_execution_date)
 
         start_date = next_execution_date + datetime.timedelta(minutes=1)
