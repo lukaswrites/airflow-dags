@@ -147,7 +147,8 @@ def create_new_dag_runs(dag,to_execution_date,conn):
 
     iterate = 1
 
-    global term_pos = global term_pos + 10
+    global term_pos
+    term_pos = term_pos + 10
 
     utc=pytz.UTC
 
