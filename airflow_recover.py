@@ -246,7 +246,7 @@ def recover_airflow(hour):
     to_execution_date = datetime.datetime.now().replace(minute=0, second=0, microsecond=0) - datetime.timedelta(minutes=5)
 
     term_pos = Value('i',0)
-    with multiprocessing.Pool(processes=10,initializer=init_term_pos,initargs=(term_pos,)) as pool:
+    with multiprocessing.Pool(processes=20,initializer=init_term_pos,initargs=(term_pos,)) as pool:
         pool.map(backfill_dag,active_dags)
         
         
