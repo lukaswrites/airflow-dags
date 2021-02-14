@@ -33,7 +33,7 @@ class Dag:
         self.task_instances = []
 
 db_creds = {}
-db_creds['host'] = 'database-1.cyjxh5hj7ptz.us-east-1.rds.amazonaws.com'
+db_creds['host'] = 'database-1.cvl1qjmdffrc.us-east-1.rds.amazonaws.com'
 db_creds['user'] = 'cloud_user'
 db_creds['password'] = 'cybersoft'
 db_creds['port'] = 5432

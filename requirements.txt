@@ -107,3 +107,4 @@ zope.deprecation==4.4.0
 supervisor==4.2.1
 fsspec==0.8.4
 deco==0.5.2
+blessings==1.7.0
