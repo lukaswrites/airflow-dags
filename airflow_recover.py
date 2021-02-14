@@ -33,7 +33,7 @@ class Dag:
         self.task_instances = []
 
 db_creds = {}
-db_creds['host'] = 'database-1.cvl1qjmdffrc.us-east-1.rds.amazonaws.com'
+db_creds['host'] = 'database-1.cluster-cgtaq5wif3fe.us-east-1.rds.amazonaws.com'
 db_creds['user'] = 'cloud_user'
 db_creds['password'] = 'cybersoft'
 db_creds['port'] = 5432
@@ -166,9 +166,12 @@ def create_new_dag_runs(dag,to_execution_date,conn):
     
     curr_term_height = copy.deepcopy(term.height)
     local_term_pos = term_pos.value 
-    
-   
 
+    if local_term_pos >= term.height:
+        system('clear')
+        with term_pos.get_lock():
+            term_pos.value = 0
+    
     utc=pytz.UTC
 
     total = (utc.localize(to_execution_date) - dag.last_exec_date).total_seconds() / 60.0 / 5.0
