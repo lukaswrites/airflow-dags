@@ -167,7 +167,7 @@ def create_new_dag_runs(dag,to_execution_date,conn):
     curr_term_height = copy.deepcopy(term.height)
     local_term_pos = term_pos.value 
 
-    if local_term_pos >= term.height-1:
+    if local_term_pos >= term.height-2:
         system('clear')
         with term_pos.get_lock():
             term_pos.value = 0
