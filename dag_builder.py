@@ -16,8 +16,8 @@ def transform_task(sleep_time):
 
 
 def long_process(random_base):
-    transform_task(sleep_time=random_base)
-    #time.sleep(random_base)
+    #transform_task(sleep_time=random_base)
+    time.sleep(random_base)
     #file_object = open('/sample.txt', 'a')
     #file_object.write('run')
     #file_object.close()
@@ -31,38 +31,24 @@ default_args = {
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': timedelta(minutes=1),
+    'retry_delay': timedelta(minutes=1)
 }
 
-dag_bag = []
 
+dag = DAG(
+    'my_first_dag',
+    default_args=default_args,
+    description='dummy dag',
+    schedule_interval=timedelta(minutes=5),
+    catchup=True
+)
 
-for i in range(64):
-    dag_id = 'dag_id'+str(i)
-    dag = DAG(
-        'dag_id'+str(i),
-        default_args=default_args,
-        description='dummy dag',
-        schedule_interval=timedelta(minutes=5),
-        catchup=True
-    )
-
-    globals()[dag_id] = dag
-    
-    us_task = None
-
-    for j in range(10):
-        ds_task = PythonOperator(
-            task_id = 'task_id_'+str(j),
-            python_callable=long_process,
-            op_kwargs={'random_base': random.randint(1,10)},
-            dag=dag
+ds_task = PythonOperator(
+    task_id = 'task_id_1',
+    python_callable=long_process,
+    op_kwargs={'random_base': random.randint(1,10)},
+    dag=dag
         )
-
-        if us_task:
-            us_task >> ds_task
-        
-        us_task = ds_task
 
 
 
