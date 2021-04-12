@@ -50,6 +50,15 @@ ds_task = PythonOperator(
     dag=dag
         )
 
+ds_task_2 = PythonOperator(
+    task_id = 'task_id_2',
+    python_callable=long_process,
+    op_kwargs={'random_base': random.randint(1,10)},
+    dag=dag
+        )
+
+ds_task >> ds_task_2
+
 
 
 
