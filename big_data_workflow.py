@@ -48,3 +48,5 @@ task_3 = PythonOperator(
     python_callable = download_data,
     dag=dag
 )
+
+task_1 >> task_2 >> task_3
