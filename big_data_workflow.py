@@ -12,6 +12,9 @@ def input_keyword():
 def download_data():
     print('download data')
 
+def transform_data():
+    print('transform data')
+
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
@@ -49,4 +52,11 @@ task_3 = PythonOperator(
     dag=dag
 )
 
+task_4 = PythonOperator(
+    task_id = "transform_data",
+    python_callable = transform_data,
+    dag=dag
+)
+
 task_1 >> task_2 >> task_3
+task_3 >> task_4
