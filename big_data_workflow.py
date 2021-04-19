@@ -31,7 +31,7 @@ dag = DAG(
     default_args = default_args,
     description = 'tarik data dari twitter',
     schedule_interval = timedelta(minutes=5),
-    catchup=False
+    catchup=True
 )
 
 task_1 = PythonOperator(
@@ -58,5 +58,9 @@ task_4 = PythonOperator(
     dag=dag
 )
 
+task_5 = 
+
 task_1 >> task_2 >> task_3
 task_2 >> task_4
+task_1 >> task_3
+
